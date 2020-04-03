@@ -11,6 +11,8 @@ import android.widget.Toast;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static int MIN_VALUE = 0, MAX_VALUE = 20;
+
     private Random randomGenerator = new Random();
     private int randomNumber;
 
@@ -27,20 +29,33 @@ public class MainActivity extends AppCompatActivity {
         return number;
     }
 
-    public void validateGuess(View view) {
-        EditText userGuessET = findViewById(R.id.userGuess);
-        Integer userGuess = Integer.parseInt(userGuessET.getText().toString());
+    private boolean isUserGuessValid(String userGuessStr){
+        try {
+            int number = Integer.parseInt(userGuessStr);
+            return (number >= MIN_VALUE) && (number <= MAX_VALUE);
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
-        String message = "";
-        if (userGuess == randomNumber) {
-            message = "Congratulations! You've got it! Now try again!";
-            randomNumber = generateRandomNumber();
-        } else if (userGuess > randomNumber) {
-            message = "Your number is too high.";
+    public void validateGuess(View view) {
+        String userGuessStr = ((EditText) findViewById(R.id.userGuess)).getText().toString();
+        String toastMessage = "";
+
+        if (isUserGuessValid(userGuessStr)) {
+            int userGuess = Integer.parseInt(userGuessStr);
+            if (userGuess == randomNumber) {
+                toastMessage = "Well done! Now try again!";
+                randomNumber = generateRandomNumber();
+            } else if (userGuess > randomNumber) {
+                toastMessage = "Your number is too high.";
+            } else {
+                toastMessage = "Your number is too low";
+            }
         } else {
-            message = "Your number is too low";
+            toastMessage = "Invalid input. Choose a number between 0 and 20.";
         }
 
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), toastMessage, Toast.LENGTH_LONG).show();
     }
 }
