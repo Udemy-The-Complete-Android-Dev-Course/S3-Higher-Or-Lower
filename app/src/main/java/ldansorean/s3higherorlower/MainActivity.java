@@ -11,17 +11,20 @@ import android.widget.Toast;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-
+    private Random randomGenerator = new Random();
     private int randomNumber;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        randomNumber = generateRandomNumber();
+    }
 
-        Random randomGenerator = new Random();
-        randomNumber = randomGenerator.nextInt(21);
-        Log.i("number", String.valueOf(randomNumber));
+    private int generateRandomNumber() {
+        int number = randomGenerator.nextInt(21);
+        Log.i("number", String.valueOf(number));
+        return number;
     }
 
     public void validateGuess(View view) {
@@ -30,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         String message = "";
         if (userGuess == randomNumber) {
-            message = "Congratulations! You've got it!";
+            message = "Congratulations! You've got it! Now try again!";
+            randomNumber = generateRandomNumber();
         } else if (userGuess > randomNumber) {
             message = "Your number is too high.";
         } else {
